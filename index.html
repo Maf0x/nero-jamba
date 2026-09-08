@@ -7,7 +7,6 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Nero">
-  <meta name="mobile-web-app-capable" content="yes">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png">
   <link rel="icon" href="icons/icon-192.png">
@@ -17,32 +16,48 @@
 <body>
   <main class="app">
     <header class="topbar">
-      <div>
-        <p class="eyebrow">JAMENDO</p>
-        <h1>Nero</h1>
+      <div class="brand">
+        <div class="brand-icon">♪</div>
+        <div>
+          <div class="eyebrow">MUSIC PLAYER</div>
+          <h1>Nero</h1>
+        </div>
       </div>
-      <button id="clearSearch" class="icon-btn" aria-label="Limpiar búsqueda" hidden>×</button>
+      <button id="clearSearch" class="round-btn" aria-label="Limpiar búsqueda" hidden>×</button>
     </header>
 
-    <section class="search-wrap" aria-label="Buscar música">
-      <span class="search-icon">⌕</span>
-      <input id="searchInput" type="search" inputmode="search"
-             placeholder="Canción, artista o término"
-             autocomplete="off" autocorrect="off" spellcheck="false">
-      <button id="searchButton" class="search-btn" aria-label="Buscar">Buscar</button>
+    <section class="hero">
+      <h2>Encuentra tu música.</h2>
+      <p>Busca canciones, artistas o álbumes en Jamendo.</p>
     </section>
 
+    <form id="searchForm" class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input id="searchInput" type="search" inputmode="search"
+        placeholder="¿Qué quieres escuchar?"
+        autocomplete="off" autocorrect="off" spellcheck="false"
+        aria-label="Buscar música">
+      <button id="searchButton" type="submit" class="search-btn">Buscar</button>
+    </form>
+
+    <div class="section-head">
+      <h3 id="resultsTitle">Resultados</h3>
+      <span id="resultsCount"></span>
+    </div>
     <div id="status" class="status" role="status" aria-live="polite"></div>
-    <section id="results" class="results" aria-label="Resultados"></section>
+    <section id="results" class="results" aria-label="Resultados de búsqueda"></section>
 
     <section id="emptyState" class="empty">
-      <div class="empty-mark">♪</div>
-      <h2>Busca algo para escuchar</h2>
-      <p>Explora música real de Jamendo.</p>
+      <div class="empty-art">
+        <span>♪</span>
+      </div>
+      <h2>Empieza a buscar</h2>
+      <p>Escribe el nombre de una canción, artista o álbum.</p>
     </section>
   </main>
 
   <aside id="player" class="player" aria-label="Reproductor" hidden>
+    <div class="player-glow"></div>
     <div class="player-inner">
       <img id="playerCover" class="player-cover" alt="">
       <div class="player-meta">
@@ -51,13 +66,11 @@
       </div>
       <button id="playerPlay" class="play-main" aria-label="Reproducir">▶</button>
     </div>
-
     <div class="progress-row">
       <span id="currentTime">0:00</span>
-      <input id="progress" type="range" min="0" max="0" value="0" step="0.1" aria-label="Posición">
+      <input id="progress" type="range" min="0" max="0" value="0" step="0.1" aria-label="Posición de reproducción">
       <span id="duration">0:00</span>
     </div>
-
     <div class="controls">
       <button id="prevButton" class="control-btn" aria-label="Anterior">⏮</button>
       <button id="bigPlay" class="big-play" aria-label="Reproducir">▶</button>

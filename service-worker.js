@@ -1,47 +1,32 @@
-const CACHE = "nero-shell-v1";
-const APP_SHELL = [
-  "./",
-  "./index.html",
-  "./style.css",
-  "./app.js",
-  "./manifest.json",
-  "./icons/icon-180.png",
-  "./icons/icon-192.png",
-  "./icons/icon-512.png"
+const CACHE = "nero-shell-v2";
+const SHELL = [
+  "./","./index.html","./style.css","./app.js","./manifest.json",
+  "./icons/icon-180.png","./icons/icon-192.png","./icons/icon-512.png"
 ];
 
 self.addEventListener("install", event => {
-  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(APP_SHELL)));
+  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)));
   self.skipWaiting();
 });
-
 self.addEventListener("activate", event => {
-  event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    )
-  );
+  event.waitUntil(caches.keys().then(keys =>
+    Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
+  ));
   self.clients.claim();
 });
-
 self.addEventListener("fetch", event => {
   const url = new URL(event.request.url);
-
-  // Never cache Jamendo API responses or audio streams.
-  if (url.hostname === "api.jamendo.com" || event.request.destination === "audio") return;
-
   if (event.request.method !== "GET") return;
+  if (url.hostname === "api.jamendo.com") return;
+  if (event.request.destination === "audio") return;
 
   event.respondWith(
-    caches.match(event.request).then(cached => {
-      if (cached) return cached;
-      return fetch(event.request).then(response => {
+    caches.match(event.request).then(cached => cached || fetch(event.request).then(response => {
+      if (url.origin === location.origin) {
         const copy = response.clone();
-        if (url.origin === location.origin) {
-          caches.open(CACHE).then(cache => cache.put(event.request, copy));
-        }
-        return response;
-      });
-    })
+        caches.open(CACHE).then(cache => cache.put(event.request, copy));
+      }
+      return response;
+    }))
   );
 });
